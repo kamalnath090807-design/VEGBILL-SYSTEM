@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: blob:;
+  script-src 'self'">
+<title>VegBill Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════ TITLEBAR ══════ -->
+  <header id="titlebar">
+    <div class="logo">
+      <div class="logo-mark">V</div>
+      <div class="logo-name">Veg<span>Bill</span> Pro</div>
+    </div>
+    <div class="tb-center">
+      <div class="tb-date" id="tb-date"></div>
+    </div>
+    <div class="tb-right">
+      <nav class="tb-nav">
+        <button class="nb active" data-screen="shop"    id="nav-shop">🏪 <span class="nav-label">Shops</span></button>
+        <button class="nb"        data-screen="billing" id="nav-billing">🧾 <span class="nav-label">Billing</span></button>
+        <button class="nb"        data-screen="history" id="nav-history">📋 <span class="nav-label">History</span></button>
+        <button class="nb" id="btn-prices">💰 <span class="nav-label">Prices</span></button>
+        <button class="nb" id="btn-export">📤 <span class="nav-label">Export</span></button>
+      </nav>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="lang-en">EN</button>
+        <button class="lang-btn"        id="lang-ta">த</button>
+      </div>
+      <div class="wc">
+        <button class="wb"     id="wb-min">─</button>
+        <button class="wb"     id="wb-max">□</button>
+        <button class="wb cls" id="wb-close">✕</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════ SCREENS ══════ -->
+  <div id="screens">
+
+    <!-- ── SHOP ── -->
+    <section class="screen active" id="screen-shop">
+      <div class="shop-hero">
+        <h1 id="shop-hero-title">Select a <em>Shop</em></h1>
+        <p  id="shop-hero-sub">Choose a shop to start billing — or create a new one</p>
+      </div>
+      <div class="shop-select-bar" id="shop-select-bar">
+        <div class="bulk-info" id="shop-bulk-info">0 selected</div>
+        <div class="bulk-actions">
+          <button class="btn b-ghost b-sm" id="shop-bulk-cancel">Cancel</button>
+          <button class="btn b-danger b-sm" id="shop-bulk-del">🗑️ Delete Selected</button>
+        </div>
+      </div>
+      <div id="shop-grid" class="shop-grid"></div>
+    </section>
+
+    <!-- ── BILLING ── -->
+    <section class="screen" id="screen-billing">
+      <div class="bill-top">
+        <div class="bt-left">
+          <button class="back-btn" id="btn-back">←</button>
+          <div class="bt-avatar" id="bt-avatar">?</div>
+          <div>
+            <div class="bt-name" id="bt-name">—</div>
+            <div class="bt-sub"  id="bt-sub">—</div>
+          </div>
+        </div>
+        <div class="bt-stats">
+          <div class="bstat"><div class="bsv" id="st-items">0</div><div class="bsl" id="lbl-items">Items</div></div>
+          <div class="bstat"><div class="bsv" id="st-qty">0</div><div class="bsl"   id="lbl-qty">Qty (kg)</div></div>
+        </div>
+        <div class="bt-acts">
+          <button class="btn b-ghost b-sm" id="btn-reset">↺ <span id="lbl-reset">Reset</span></button>
+          <button class="btn b-primary b-lg" id="btn-save-top">💾 <span id="lbl-save-top">Save Bill</span></button>
+        </div>
+      </div>
+      <div class="note-bar">
+        <span class="note-lbl" id="lbl-note">NOTE</span>
+        <input type="text" id="bill-note" placeholder="Optional note for this bill…" autocomplete="off">
+      </div>
+      <div class="tbl-wrap">
+        <table id="ptable">
+          <thead><tr>
+            <th style="width:32px"></th>
+            <th id="th-product">Product</th>
+            <th class="th-qty"  id="th-qty">Quantity (kg)</th>
+            <th class="th-rate" id="th-rate">Rate / kg</th>
+            <th class="th-amt"  id="th-amt">Amount (₹)</th>
+          </tr></thead>
+          <tbody id="ptbody"></tbody>
+        </table>
+      </div>
+      <div id="tot-bar">
+        <div class="tot-l" id="lbl-filled">Items filled: <strong id="filled-ct">0</strong></div>
+        <div class="tot-r">
+          <span class="tot-lbl" id="lbl-grand">Grand Total</span>
+          <span id="grand-total">₹ 0.00</span>
+          <button class="btn b-primary" id="btn-save-bot"><span id="lbl-save-bot">Save Bill</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HISTORY ── -->
+    <section class="screen" id="screen-history">
+      <div class="hs-side">
+        <div class="hs-head">
+          <h2 id="lbl-hist-title">📋 Bill History</h2>
+          <div class="hs-search">
+            <span class="hs-search-icon">🔍</span>
+            <input type="text" id="hist-search" placeholder="Search shop, date…" autocomplete="off">
+          </div>
+        </div>
+        <div class="hs-bulk-bar" id="hs-bulk-bar">
+          <div class="hs-bulk-info" id="hs-bulk-info">0 selected</div>
+          <div class="hs-bulk-actions">
+            <button class="bulk-cancel-btn" id="hist-bulk-cancel">Cancel</button>
+            <button class="bulk-del-btn"    id="hist-bulk-del">🗑️ Delete</button>
+          </div>
+        </div>
+        <div class="hs-select-head">
+          <label class="hs-select-label">
+            <input type="checkbox" class="hs-check-all" id="hist-check-all">
+            Select All
+          </label>
+          <span class="hs-count" id="hs-count"></span>
+        </div>
+        <div id="hist-list" class="hs-list"></div>
+      </div>
+      <div id="hist-detail" class="hs-detail">
+        <div class="hs-empty">
+          <div class="empty-state">
+            <div class="ei">📄</div>
+            <h3 id="lbl-select-bill">Select a Bill</h3>
+            <p  id="lbl-select-bill-sub">Click any bill from the list to view details</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+<script src="app.js"></script>
+</body>
+</html>
